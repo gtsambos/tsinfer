@@ -173,12 +173,11 @@ import the data for this simulation into ``tsinfer``'s sample data format.
 .. note::
     If you already have a tree sequence file, and wish to create a sample data file from
     it, a shortcut is to use the :meth:`tsinfer.SampleData.from_tree_sequence` method. In
-    this case you do not need to specify the sequence length, and you probably want to
-    specify ``use_times=False``. For example, the following snippet is equivalent to the
-    data file creation part of the code above::
+    this case you do not need to specify the sequence length. For example, the following snippet
+    is equivalent to the data file creation part of the code above::
 
         tsinfer.SampleData.from_tree_sequence(
-            ts, path="simulation.samples", num_flush_threads=2, use_times=False)
+            ts, path="simulation.samples", num_flush_threads=2)
 
 Examining the files on the command line, we then see the following::
 
