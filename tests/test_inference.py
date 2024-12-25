@@ -1996,6 +1996,14 @@ class TestBuildAncestors:
                 sample_data, genotype_encoding=tsinfer.GenotypeEncoding.ONE_BIT
             )
 
+    def test_set_ancestors_from_pedigree(self):
+        # Only things that can be interpreted as a 1D double array
+        # should be accepted.
+        with tsinfer.SampleData(1.0) as sample_data:
+            sample_data.add_site(0.5, [1, 1])
+        # with pytest.raises(ValueError):
+        tsinfer.generate_ancestors(sample_data, exclude_positions=[[None]], pedigree=True)
+
 
 class TestAncestorsTreeSequence:
     """

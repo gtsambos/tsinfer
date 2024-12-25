@@ -398,6 +398,7 @@ def generate_ancestors(
     engine=constants.C_ENGINE,
     progress_monitor=None,
     record_provenance=True,
+    pedigree=None,
     **kwargs,
 ):
     """
@@ -485,8 +486,12 @@ def generate_ancestors(
         mmap_temp_dir=mmap_temp_dir,
         progress_monitor=progress_monitor,
     )
-    generator.add_sites(exclude_positions)
-    ancestor_data = generator.run()
+    if pedigree is None:
+        generator.add_sites(exclude_positions)
+        ancestor_data = generator.run()
+    else:
+        print("Hi!")
+        return None
     for timestamp, record in sample_data.provenances():
         ancestor_data.add_provenance(timestamp, record)
     if record_provenance:
