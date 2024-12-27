@@ -490,9 +490,6 @@ def generate_ancestors(
     if pedigree is None:  
         ancestor_data = generator.run()
     else:
-        # assert isinstance(pedigree, tsinfer.SampleData)
-        print("Yay pedigree!")
-        # return None
         ancestor_data = generator.set_parental_haplotypes(pedigree)
     for timestamp, record in sample_data.provenances():
         ancestor_data.add_provenance(timestamp, record)

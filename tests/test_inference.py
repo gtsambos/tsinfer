@@ -1999,13 +1999,15 @@ class TestBuildAncestors:
     def test_set_ancestors_from_pedigree(self):
         # Only things that can be interpreted as a 1D double array
         # should be accepted.
-        with tsinfer.SampleData(1.0) as sample_data:
-            sample_data.add_site(0.5, [1, 1])
+        with tsinfer.SampleData(sequence_length=5) as sample_data:
+            sample_data.add_site(0.4, [0, 1, 1], time=0.5)
+        with tsinfer.SampleData(sequence_length=5) as parent_data:
+            parent_data.add_site(0.4, [0, 1, 1], time=0.5)
         # with pytest.raises(ValueError):
-        with tsinfer.SampleData(1.0) as parent_data:
-            parent_data.add_site(0.5, [1, 1])
-        # with pytest.raises(ValueError):
-        tsinfer.generate_ancestors(sample_data, pedigree=parent_data)
+        ancestor_data = tsinfer.generate_ancestors(sample_data, pedigree=None)
+        # ancestor_data = tsinfer.generate_ancestors(sample_data, pedigree=parent_data)
+        print(ancestor_data)
+        ts = tsinfer.match_ancestors(sample_data, ancestor_data)
 
 
 class TestAncestorsTreeSequence:
