@@ -486,12 +486,14 @@ def generate_ancestors(
         mmap_temp_dir=mmap_temp_dir,
         progress_monitor=progress_monitor,
     )
-    if pedigree is None:
-        generator.add_sites(exclude_positions)
+    generator.add_sites(exclude_positions)
+    if pedigree is None:  
         ancestor_data = generator.run()
     else:
-        print("Hi!")
-        return None
+        # assert isinstance(pedigree, tsinfer.SampleData)
+        print("Yay pedigree!")
+        # return None
+        ancestor_data = generator.set_parental_haplotypes(pedigree)
     for timestamp, record in sample_data.provenances():
         ancestor_data.add_provenance(timestamp, record)
     if record_provenance:
@@ -1653,7 +1655,33 @@ class AncestorsGenerator:
             except:  # noqa
                 pass
         return self.ancestor_data
-
+    
+    def set_parental_haplotypes(self, pedigree):
+        self.ancestor_data = formats.AncestorData(
+            self.sample_data.sites_position[:][self.inference_site_ids],
+            self.sample_data.sequence_length,
+            path=self.ancestor_data_path,
+            **self.ancestor_data_kwargs,
+        )
+        print("We're setting the haplotypes")
+        haplotypes = [
+            h[1] for h in pedigree.haplotypes()
+        ]
+        print(self.num_sites)
+        for h in haplotypes:
+            self.ancestor_data.add_ancestor(
+                start=0,
+                end=self.num_sites,
+                time=1, # should make it the time of the sample + 1, right?
+                focal_sites=np.array([], dtype=np.int32),
+                haplotype=h
+            )
+        if self.mmap_temp_file is not None:
+            try:
+                self.mmap_temp_file.close()
+            except:  # noqa
+                pass
+        return self.ancestor_data
 
 @dataclasses.dataclass
 class StoredMatchData:

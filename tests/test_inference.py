@@ -2002,7 +2002,10 @@ class TestBuildAncestors:
         with tsinfer.SampleData(1.0) as sample_data:
             sample_data.add_site(0.5, [1, 1])
         # with pytest.raises(ValueError):
-        tsinfer.generate_ancestors(sample_data, exclude_positions=[[None]], pedigree=True)
+        with tsinfer.SampleData(1.0) as parent_data:
+            parent_data.add_site(0.5, [1, 1])
+        # with pytest.raises(ValueError):
+        tsinfer.generate_ancestors(sample_data, pedigree=parent_data)
 
 
 class TestAncestorsTreeSequence:
